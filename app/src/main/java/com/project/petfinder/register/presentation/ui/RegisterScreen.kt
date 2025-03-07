@@ -1,9 +1,12 @@
-package com.project.petfinder.login.presentation.ui
+package com.project.petfinder.register.presentation.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,29 +23,31 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
-import com.project.petfinder.login.presentation.viewmodel.LoginViewModel
+import com.project.petfinder.register.presentation.viewmodel.RegisterViewModel
 import com.project.petfinder.ui.theme.Montserrat
 
 @Composable
-fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onRegisterClick: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+fun RegisterScreen(
+    onRegisterSuccess: () -> Unit,
+    onLoginClick: () -> Unit,
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp),
+            .padding(horizontal = 24.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         // Logo
         Box(
             modifier = Modifier
-                .size(120.dp)
+                .size(100.dp)
                 .padding(8.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -66,7 +71,6 @@ fun LoginScreen(
                 color = Color.Gray,
                 fontFamily = Montserrat
             )
-
             Text(
                 text = "Finder",
                 fontSize = 28.sp,
@@ -76,11 +80,11 @@ fun LoginScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(60.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-        // Login Header
+        // Register Header
         Text(
-            text = "INGRESAR",
+            text = "BIENVENIDO",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFFBB6835),
@@ -89,7 +93,7 @@ fun LoginScreen(
         )
 
         Text(
-            text = "Por favor inicie sesión para continuar",
+            text = "Complete la información para crear un nuevo perfil",
             fontSize = 14.sp,
             color = Color.Gray,
             fontFamily = Montserrat,
@@ -109,51 +113,32 @@ fun LoginScreen(
             )
         }
 
-        // Email Field Label
-        Text(
-            text = "Correo Electrónico",
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.Medium,
-                color = Color.DarkGray
-            ),
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(bottom = 8.dp)
-        )
-
-        // Email TextField
-        OutlinedTextField(
-            value = uiState.email,
-            onValueChange = { email: String -> viewModel.onEmailChanged(email) },  // Fixed 'it' parameter
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = {
-                Text(
-                    text = "jhon@doe.com",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Lucide.Mail,
-                    contentDescription = "Email Icon",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(20.dp)
-                )
-            },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            shape = RoundedCornerShape(8.dp),
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.LightGray,
-                focusedBorderColor = Color(0xFFBB6835)
-            )
+        // Name Field
+        FormField(
+            label = "Nombre",
+            value = uiState.name,
+            onValueChange = viewModel::onNameChanged,
+            placeholder = "Jhon Doe",
+            leadingIcon = { Icon(Lucide.User, "Name", tint = Color.Gray) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password Field Label
+        // Email Field
+        FormField(
+            label = "Correo Electrónico",
+            value = uiState.email,
+            onValueChange = viewModel::onEmailChanged,
+            placeholder = "jhon@doe.com",
+            leadingIcon = { Icon(Lucide.Mail, "Email", tint = Color.Gray) },
+            keyboardType = KeyboardType.Email
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Municipality Field
         Text(
-            text = "Contraseña",
+            text = "Municipio",
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Medium,
                 color = Color.DarkGray
@@ -163,39 +148,36 @@ fun LoginScreen(
                 .padding(bottom = 8.dp)
         )
 
-        var passwordVisible by remember { mutableStateOf(false) }
+        var dropdownExpanded by remember { mutableStateOf(false) }
 
-        // Password TextField
         OutlinedTextField(
-            value = uiState.password,
-            onValueChange = { password: String -> viewModel.onPasswordChanged(password) },
-            modifier = Modifier.fillMaxWidth(),
+            value = uiState.selectedMunicipality?.name ?: "",
+            onValueChange = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { dropdownExpanded = true },
             placeholder = {
                 Text(
-                    text = "••••••••••••••",
+                    "Selecciona un municipio",
                     style = MaterialTheme.typography.bodyMedium
                 )
             },
             leadingIcon = {
                 Icon(
-                    imageVector = Lucide.Lock,  // Added parentheses for proper initialization
-                    contentDescription = "Password Icon",
+                    Lucide.MapPin,
+                    contentDescription = "Location",
                     tint = Color.Gray,
                     modifier = Modifier.size(20.dp)
                 )
             },
             trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        imageVector = if (passwordVisible) Lucide.EyeOff else Lucide.Eye,  // Added parentheses
-                        contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                        tint = Color.Gray
-                    )
-                }
+                Icon(
+                    Lucide.ChevronDown,
+                    contentDescription = "Expand",
+                    tint = Color.Gray
+                )
             },
-            singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            readOnly = true,
             shape = RoundedCornerShape(8.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedBorderColor = Color.LightGray,
@@ -203,12 +185,51 @@ fun LoginScreen(
             )
         )
 
+        DropdownMenu(
+            expanded = dropdownExpanded,
+            onDismissRequest = { dropdownExpanded = false },
+            modifier = Modifier.fillMaxWidth(0.9f)
+        ) {
+            uiState.municipalities.forEach { municipality ->
+                DropdownMenuItem(
+                    text = { Text(municipality.name) },
+                    onClick = {
+                        viewModel.onMunicipalitySelected(municipality)
+                        dropdownExpanded = false
+                    }
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Password Field
+        var passwordVisible by remember { mutableStateOf(false) }
+
+        FormField(
+            label = "Contraseña",
+            value = uiState.password,
+            onValueChange = viewModel::onPasswordChanged,
+            placeholder = "••••••••••••••",
+            leadingIcon = { Icon(Lucide.Lock, "Password", tint = Color.Gray) },
+            trailingIcon = {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        if (passwordVisible) Lucide.EyeOff else Lucide.Eye,
+                        if (passwordVisible) "Hide password" else "Show password",
+                        tint = Color.Gray
+                    )
+                }
+            },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardType = KeyboardType.Password
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Login Button
+        // Register Button
         Button(
-            onClick = { viewModel.login() },
+            onClick = { viewModel.register() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
@@ -223,7 +244,7 @@ fun LoginScreen(
                 )
             } else {
                 Text(
-                    text = "Ingresar",
+                    text = "Crear cuenta",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     fontFamily = Montserrat
@@ -231,23 +252,23 @@ fun LoginScreen(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // Register Link
+        // Login Link
         Row(
             modifier = Modifier.padding(bottom = 24.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "¿No tienes una cuenta? ",
+                text = "¿Ya tienes una cuenta? ",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 fontFamily = Montserrat
             )
-            TextButton(onClick = onRegisterClick) {
+            TextButton(onClick = onLoginClick) {
                 Text(
-                    text = "Regístrate",
+                    text = "Inicia sesión",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color(0xFFBB6835),
@@ -257,10 +278,54 @@ fun LoginScreen(
         }
     }
 
-    // Handle login success
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
-            onLoginSuccess()
+            onRegisterSuccess()
         }
     }
+}
+
+@Composable
+fun FormField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardType: KeyboardType = KeyboardType.Text
+) {
+    Text(
+        text = label,
+        style = MaterialTheme.typography.bodyMedium.copy(
+            fontWeight = FontWeight.Medium,
+            color = Color.DarkGray
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp)
+    )
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
+        placeholder = {
+            Text(
+                placeholder,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        leadingIcon = leadingIcon?.let { { it() } },
+        trailingIcon = trailingIcon?.let { { it() } },
+        singleLine = true,
+        visualTransformation = visualTransformation,
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        shape = RoundedCornerShape(8.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = Color.LightGray,
+            focusedBorderColor = Color(0xFFBB6835)
+        )
+    )
 }

@@ -11,25 +11,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
-import com.project.petfinder.login.presentation.viewmodel.LoginViewModel
 import com.project.petfinder.ui.theme.Montserrat
 
 @Composable
-fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onRegisterClick: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+fun LoginScreenPreview(
+    email: String = "",
+    password: String = "",
+    errorMessage: String? = null,
+    isLoading: Boolean = false,
+    isSuccess: Boolean = false,
+    onEmailChanged: (String) -> Unit = {},
+    onPasswordChanged: (String) -> Unit = {},
+    onLoginClick: () -> Unit = {},
+    onLoginSuccess: () -> Unit = {},
+    onRegisterClick: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -98,9 +105,10 @@ fun LoginScreen(
                 .padding(top = 4.dp, bottom = 24.dp)
         )
 
-        if (uiState.errorMessage != null) {
+        // Error Message
+        if (errorMessage != null) {
             Text(
-                text = uiState.errorMessage!!,
+                text = errorMessage,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
@@ -109,7 +117,7 @@ fun LoginScreen(
             )
         }
 
-        // Email Field Label
+        // Email Field
         Text(
             text = "Correo Electrónico",
             style = MaterialTheme.typography.bodyMedium.copy(
@@ -121,10 +129,9 @@ fun LoginScreen(
                 .padding(bottom = 8.dp)
         )
 
-        // Email TextField
         OutlinedTextField(
-            value = uiState.email,
-            onValueChange = { email: String -> viewModel.onEmailChanged(email) },  // Fixed 'it' parameter
+            value = email,
+            onValueChange = onEmailChanged,
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
@@ -151,7 +158,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password Field Label
+        // Password Field
         Text(
             text = "Contraseña",
             style = MaterialTheme.typography.bodyMedium.copy(
@@ -163,12 +170,9 @@ fun LoginScreen(
                 .padding(bottom = 8.dp)
         )
 
-        var passwordVisible by remember { mutableStateOf(false) }
-
-        // Password TextField
         OutlinedTextField(
-            value = uiState.password,
-            onValueChange = { password: String -> viewModel.onPasswordChanged(password) },
+            value = password,
+            onValueChange = onPasswordChanged,
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
@@ -178,7 +182,7 @@ fun LoginScreen(
             },
             leadingIcon = {
                 Icon(
-                    imageVector = Lucide.Lock,  // Added parentheses for proper initialization
+                    imageVector = Lucide.Lock,
                     contentDescription = "Password Icon",
                     tint = Color.Gray,
                     modifier = Modifier.size(20.dp)
@@ -187,7 +191,7 @@ fun LoginScreen(
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
-                        imageVector = if (passwordVisible) Lucide.EyeOff else Lucide.Eye,  // Added parentheses
+                        imageVector = if (passwordVisible) Lucide.EyeOff else Lucide.Eye,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
                         tint = Color.Gray
                     )
@@ -203,20 +207,19 @@ fun LoginScreen(
             )
         )
 
-
         Spacer(modifier = Modifier.height(32.dp))
 
         // Login Button
         Button(
-            onClick = { viewModel.login() },
+            onClick = onLoginClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBB6835)),
             shape = RoundedCornerShape(8.dp),
-            enabled = !uiState.isLoading
+            enabled = !isLoading
         ) {
-            if (uiState.isLoading) {
+            if (isLoading) {
                 CircularProgressIndicator(
                     color = Color.White,
                     modifier = Modifier.size(24.dp)
@@ -256,11 +259,33 @@ fun LoginScreen(
             }
         }
     }
+}
 
-    // Handle login success
-    LaunchedEffect(uiState.isSuccess) {
-        if (uiState.isSuccess) {
-            onLoginSuccess()
-        }
-    }
+@Preview(name = "Login Normal", showBackground = true)
+@Composable
+fun LoginScreenNormalPreview() {
+    LoginScreenPreview(
+        email = "usuario@ejemplo.com",
+        password = "contraseña123"
+    )
+}
+
+@Preview(name = "Login Loading", showBackground = true)
+@Composable
+fun LoginScreenLoadingPreview() {
+    LoginScreenPreview(
+        email = "usuario@ejemplo.com",
+        password = "contraseña123",
+        isLoading = true
+    )
+}
+
+@Preview(name = "Login Error", showBackground = true)
+@Composable
+fun LoginScreenErrorPreview() {
+    LoginScreenPreview(
+        email = "usuario@ejemplo.com",
+        password = "contraseña123",
+        errorMessage = "Credenciales inválidas. Por favor intente nuevamente."
+    )
 }

@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.project.petfinder"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -54,6 +54,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.coil.compose)
+
+    implementation(libs.threetenbp)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

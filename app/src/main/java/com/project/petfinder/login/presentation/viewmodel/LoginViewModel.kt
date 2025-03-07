@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// ViewModel for the login screen
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
@@ -47,7 +46,6 @@ class LoginViewModel @Inject constructor(
     }
 }
 
-// UI state for login screen
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
