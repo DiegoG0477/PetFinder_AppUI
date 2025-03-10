@@ -22,7 +22,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.project.petfinder.ui.theme.Montserrat
-import com.project.petfinder.bulletin.presentation.ui.component.DatePicker
 import com.project.petfinder.core.domain.model.Municipality
 import com.project.petfinder.register.presentation.ui.FormField
 import org.threeten.bp.LocalDate
@@ -71,6 +70,7 @@ fun CreateBulletinErrorPreview() {
     )
 }
 
+@Preview(name = "CreateBulletinPreview", showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateBulletinScreenPreview(
@@ -78,7 +78,7 @@ fun CreateBulletinScreenPreview(
     date: LocalDate = LocalDate.now(),
     selectedMunicipality: Municipality? = null,
     additionalInfo: String = "",
-    selectedImageUri: Any? = null, // Puede ser Uri o resource ID
+    selectedImageUri: Any? = null,
     municipalities: List<Municipality> = emptyList(),
     isLoading: Boolean = false,
     isSuccess: Boolean = false,
@@ -116,8 +116,6 @@ fun CreateBulletinScreenPreview(
                 .padding(horizontal = 24.dp)
                 .verticalScroll(scrollState)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
             // Header
             Text(
                 text = "CREAR BOLETÍN DE BÚSQUEDA",
@@ -173,9 +171,9 @@ fun CreateBulletinScreenPreview(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Municipality Field
             var dropdownExpanded by remember { mutableStateOf(false) }
 
+            // Municipality Field
             Text(
                 text = "Municipio",
                 style = MaterialTheme.typography.bodyMedium.copy(
@@ -203,6 +201,7 @@ fun CreateBulletinScreenPreview(
                         contentDescription = "Location",
                         tint = Color.Gray,
                         modifier = Modifier.size(20.dp)
+                    )
                 },
                 trailingIcon = {
                     Icon(
@@ -217,25 +216,26 @@ fun CreateBulletinScreenPreview(
                     unfocusedBorderColor = Color.LightGray,
                     focusedBorderColor = Color(0xFFBB6835)
                 )
+            )
 
-                        DropdownMenu(
-                        expanded = dropdownExpanded,
+            DropdownMenu(
+                expanded = dropdownExpanded,
                 onDismissRequest = { dropdownExpanded = false },
                 modifier = Modifier.fillMaxWidth(0.9f)
-                {
-                    municipalities.forEach { municipality ->
-                        DropdownMenuItem(
-                            text = { Text(municipality.name) },
-                            onClick = { dropdownExpanded = false }
-                        )
-                    }
+            ) {
+                municipalities.forEach { municipality ->
+                    DropdownMenuItem(
+                        text = { Text(municipality.name) },
+                        onClick = { dropdownExpanded = false }
+                    )
                 }
+            }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-                        // Additional Info
-                        Text(
-                        text = "Información adicional",
+            // Additional Info Field
+            Text(
+                text = "Información adicional",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Medium,
                     color = Color.DarkGray
@@ -260,31 +260,34 @@ fun CreateBulletinScreenPreview(
                     unfocusedBorderColor = Color.LightGray,
                     focusedBorderColor = Color(0xFFBB6835)
                 )
+            )
 
-                        Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-                // Image Section
-                if (selectedImageUri != null) {
-                    Image(
-                        painter = painterResource(id = R.drawable.pet_logo),
-                        contentDescription = "Pet image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+            // Image Section
+            if (selectedImageUri != null) {
+                Image(
+                    painter = painterResource(id = R.drawable.pet_logo),
+                    contentDescription = "Pet image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
-                        TextButton(
-                        onClick = { },
+            TextButton(
+                onClick = { },
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(0xFFBB6835))
+                    contentColor = Color(0xFFBB6835)
+                )
             ) {
                 Text(
                     text = if (selectedImageUri == null) "Subir imagen" else "Cambiar imagen",
                     fontSize = 14.sp,
-                    fontFamily = Montserrat)
+                    fontFamily = Montserrat
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -302,13 +305,15 @@ fun CreateBulletinScreenPreview(
                 if (isLoading) {
                     CircularProgressIndicator(
                         color = Color.White,
-                        modifier = Modifier.size(24.dp))
+                        modifier = Modifier.size(24.dp)
+                    )
                 } else {
                     Text(
                         text = "Publicar",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        fontFamily = Montserrat)
+                        fontFamily = Montserrat
+                    )
                 }
             }
 

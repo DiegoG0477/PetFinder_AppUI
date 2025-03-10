@@ -1,8 +1,5 @@
-package com.project.petfinder.bulletin.presentation.ui
+package com.project.petfinder.rescue.presentation.ui
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,26 +14,83 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import coil3.compose.AsyncImage
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
-import com.project.petfinder.bulletin.presentation.viewmodel.CreateBulletinViewModel
+import com.project.petfinder.core.domain.model.Municipality
+import com.project.petfinder.register.presentation.ui.FormField
 import com.project.petfinder.ui.theme.Montserrat
-import com.project.petfinder.bulletin.presentation.ui.component.DatePicker
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+
+@Preview(name = "Formulario Vacío", showBackground = true)
+@Composable
+fun ReportRescueEmptyPreview() {
+    FakeReportRescueScreen()
+}
+
+@Preview(name = "Formulario Completo", showBackground = true)
+@Composable
+fun ReportRescueFilledPreview() {
+    FakeReportRescueScreen(
+        date = LocalDate.now(),
+        selectedMunicipality = Municipality(1, "Medellín"),
+        additionalInfo = "La mascota está en buen estado, la encontré en el parque central",
+        selectedImageUri = R.drawable.pet_logo,
+        municipalities = listOf(
+            Municipality(1, "Medellín"),
+            Municipality(2, "Envigado"),
+            Municipality(3, "Sabaneta")
+        )
+    )
+}
+
+@Preview(name = "Cargando", showBackground = true)
+@Composable
+fun ReportRescueLoadingPreview() {
+    FakeReportRescueScreen(
+        isLoading = true,
+        additionalInfo = "Mascota rescatada en condición estable..."
+    )
+}
+
+@Preview(name = "Error", showBackground = true)
+@Composable
+fun ReportRescueErrorPreview() {
+    FakeReportRescueScreen(
+        errorMessage = "Debes seleccionar un municipio",
+        selectedImageUri = R.drawable.pet_logo
+    )
+}
+
+@Preview(name = "Con Imagen", showBackground = true)
+@Composable
+fun ReportRescueWithImagePreview() {
+    FakeReportRescueScreen(
+        selectedImageUri = R.drawable.pet_logo,
+        additionalInfo = "Mascota encontrada cerca del centro comercial"
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateBulletinScreen(
-    onNavigateBack: () -> Unit,
-    onBulletinCreated: () -> Unit,
-    viewModel: CreateBulletinViewModel = hiltViewModel()
+private fun FakeReportRescueScreen(
+    date: LocalDate = LocalDate.now(),
+    selectedMunicipality: Municipality? = null,
+    additionalInfo: String = "",
+    selectedImageUri: Any? = null,
+    municipalities: List<Municipality> = emptyList(),
+    isLoading: Boolean = false,
+    isSuccess: Boolean = false,
+    errorMessage: String? = null,
+    onNavigateBack: () -> Unit = {},
+    onRescueReported: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    var dropdownExpanded by remember { mutableStateOf(false) }
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy") }
 
     Scaffold(
         topBar = {
@@ -51,7 +105,7 @@ fun CreateBulletinScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
-                            Lucide.ArrowLeft,
+                            imageVector = Lucide.ArrowLeft,
                             contentDescription = "Regresar",
                             tint = Color.White
                         )
@@ -74,7 +128,7 @@ fun CreateBulletinScreen(
 
             // Header
             Text(
-                text = "CREAR BOLETÍN DE BÚSQUEDA",
+                text = "NOTIFICA TU RESCATE",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFBB6835),
@@ -82,16 +136,17 @@ fun CreateBulletinScreen(
             )
 
             Text(
-                text = "Crea un nuevo boletín de búsqueda para localizar a tu mascota",
+                text = "¿Tienes a Firulais? Avísale al dueño que está seguro",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 fontFamily = Montserrat,
                 modifier = Modifier.padding(top = 4.dp, bottom = 24.dp)
             )
 
-            if (uiState.errorMessage != null) {
+            // Error Message
+            if (errorMessage != null) {
                 Text(
-                    text = uiState.errorMessage!!,
+                    text = errorMessage,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -100,47 +155,19 @@ fun CreateBulletinScreen(
                 )
             }
 
-            // Pet Name Field
-            FormField(
-                label = "Nombre de la mascota",
-                value = uiState.petName,
-                onValueChange = viewModel::onPetNameChanged,
-                placeholder = "Firulais",
-                leadingIcon = { Icon(Lucide.Dog, "Pet", tint = Color.Gray) }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            var showDatePicker by remember { mutableStateOf(false) }
-            val dateFormatter = remember {
-                DateTimeFormatter.ofPattern("dd/MM/yyyy")
-            }
-
+            // Date Field
             FormField(
                 label = "Fecha",
-                value = uiState.date.format(dateFormatter),
+                value = date.format(dateFormatter),
                 onValueChange = { },
                 placeholder = "DD/MM/YYYY",
                 leadingIcon = { Icon(Lucide.Calendar, "Date", tint = Color.Gray) },
-                readOnly = true,
-                modifier = Modifier.clickable { showDatePicker = true }
+                readOnly = true
             )
 
-            if (showDatePicker) {
-                DatePicker(
-                    onDismissRequest = { showDatePicker = false },
-                    onDateSelected = { selectedDate ->
-                        viewModel.onDateChanged(selectedDate)
-                        showDatePicker = false
-                    },
-                    selectedDate = uiState.date
-                )
-            }
             Spacer(modifier = Modifier.height(16.dp))
 
             // Municipality Field
-            var dropdownExpanded by remember { mutableStateOf(false) }
-
             Text(
                 text = "Municipio",
                 style = MaterialTheme.typography.bodyMedium.copy(
@@ -151,20 +178,20 @@ fun CreateBulletinScreen(
             )
 
             OutlinedTextField(
-                value = uiState.selectedMunicipality?.name ?: "",
+                value = selectedMunicipality?.name ?: "",
                 onValueChange = { },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { dropdownExpanded = true },
                 placeholder = {
                     Text(
-                        "Selecciona un municipio",
+                        text = "Selecciona un municipio",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
                 leadingIcon = {
                     Icon(
-                        Lucide.MapPin,
+                        imageVector = Lucide.MapPin,
                         contentDescription = "Location",
                         tint = Color.Gray,
                         modifier = Modifier.size(20.dp)
@@ -172,7 +199,7 @@ fun CreateBulletinScreen(
                 },
                 trailingIcon = {
                     Icon(
-                        Lucide.ChevronDown,
+                        imageVector = Lucide.ChevronDown,
                         contentDescription = "Expand",
                         tint = Color.Gray
                     )
@@ -190,13 +217,10 @@ fun CreateBulletinScreen(
                 onDismissRequest = { dropdownExpanded = false },
                 modifier = Modifier.fillMaxWidth(0.9f)
             ) {
-                uiState.municipalities.forEach { municipality ->
+                municipalities.forEach { municipality ->
                     DropdownMenuItem(
                         text = { Text(municipality.name) },
-                        onClick = {
-                            viewModel.onMunicipalitySelected(municipality)
-                            dropdownExpanded = false
-                        }
+                        onClick = { dropdownExpanded = false }
                     )
                 }
             }
@@ -204,24 +228,16 @@ fun CreateBulletinScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Additional Information Field
-            Text(
-                text = "Información adicional",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Medium,
-                    color = Color.DarkGray
-                ),
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
             OutlinedTextField(
-                value = uiState.additionalInfo,
-                onValueChange = viewModel::onAdditionalInfoChanged,
+                value = additionalInfo,
+                onValueChange = { },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
+                label = { Text("Información adicional") },
                 placeholder = {
                     Text(
-                        "Describe características distintivas de tu mascota",
+                        text = "Describe el estado de la mascota y dónde se encuentra",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
@@ -234,17 +250,11 @@ fun CreateBulletinScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Image Upload
-            val imagePickerLauncher = rememberLauncherForActivityResult(
-                contract = ActivityResultContracts.GetContent()
-            ) { uri: Uri? ->
-                uri?.let { viewModel.onImageSelected(it) }
-            }
-
-            if (uiState.selectedImageUri != null) {
-                AsyncImage(
-                    model = uiState.selectedImageUri,
-                    contentDescription = "Selected pet image",
+            // Image Section
+            if (selectedImageUri != null) {
+                Image(
+                    painter = painterResource(id = R.drawable.pet_logo),
+                    contentDescription = "Imagen del rescate",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
@@ -254,13 +264,13 @@ fun CreateBulletinScreen(
             }
 
             TextButton(
-                onClick = { imagePickerLauncher.launch("image/*") },
+                onClick = { },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(0xFFBB6835)
                 )
             ) {
                 Text(
-                    text = if (uiState.selectedImageUri == null) "Subir imagen" else "Cambiar imagen",
+                    text = if (selectedImageUri == null) "Subir imagen" else "Cambiar imagen",
                     fontSize = 14.sp,
                     fontFamily = Montserrat
                 )
@@ -268,24 +278,24 @@ fun CreateBulletinScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Publish Button
+            // Notify Button
             Button(
-                onClick = { viewModel.createBulletin() },
+                onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFBB6835)),
                 shape = RoundedCornerShape(8.dp),
-                enabled = !uiState.isLoading
+                enabled = !isLoading
             ) {
-                if (uiState.isLoading) {
+                if (isLoading) {
                     CircularProgressIndicator(
                         color = Color.White,
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
                     Text(
-                        text = "Publicar",
+                        text = "Notificar",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         fontFamily = Montserrat
@@ -297,49 +307,9 @@ fun CreateBulletinScreen(
         }
     }
 
-    LaunchedEffect(uiState.isSuccess) {
-        if (uiState.isSuccess) {
-            onBulletinCreated()
+    LaunchedEffect(isSuccess) {
+        if (isSuccess) {
+            onRescueReported()
         }
     }
-}
-
-@Composable
-fun FormField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    modifier: Modifier = Modifier,
-    readOnly: Boolean = false
-) {
-    Text(
-        text = label,
-        style = MaterialTheme.typography.bodyMedium.copy(
-            fontWeight = FontWeight.Medium,
-            color = Color.DarkGray
-        ),
-        modifier = Modifier.padding(bottom = 8.dp)
-    )
-
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier.fillMaxWidth(),
-        placeholder = {
-            Text(
-                placeholder,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        },
-        leadingIcon = leadingIcon?.let { { it() } },
-        readOnly = readOnly,
-        singleLine = true,
-        shape = RoundedCornerShape(8.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            unfocusedBorderColor = Color.LightGray,
-            focusedBorderColor = Color(0xFFBB6835)
-        )
-    )
 }

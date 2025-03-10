@@ -1,4 +1,4 @@
-package com.project.petfinder.bulletin.presentation.ui
+package com.project.petfinder.sighting.presentation.ui
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,17 +23,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
-import com.project.petfinder.bulletin.presentation.viewmodel.CreateBulletinViewModel
 import com.project.petfinder.ui.theme.Montserrat
 import com.project.petfinder.bulletin.presentation.ui.component.DatePicker
+import com.project.petfinder.sighting.presentation.viewmodel.ReportSightingViewModel
 import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateBulletinScreen(
+fun ReportSightingScreen(
     onNavigateBack: () -> Unit,
-    onBulletinCreated: () -> Unit,
-    viewModel: CreateBulletinViewModel = hiltViewModel()
+    onSightingReported: () -> Unit,
+    viewModel: ReportSightingViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
@@ -74,7 +74,7 @@ fun CreateBulletinScreen(
 
             // Header
             Text(
-                text = "CREAR BOLETÍN DE BÚSQUEDA",
+                text = "REPORTAR AVISTAMIENTO",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFBB6835),
@@ -82,7 +82,7 @@ fun CreateBulletinScreen(
             )
 
             Text(
-                text = "Crea un nuevo boletín de búsqueda para localizar a tu mascota",
+                text = "¿Has visto Firulais? Reporta tu avistamiento al dueño",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 fontFamily = Montserrat,
@@ -100,23 +100,13 @@ fun CreateBulletinScreen(
                 )
             }
 
-            // Pet Name Field
-            FormField(
-                label = "Nombre de la mascota",
-                value = uiState.petName,
-                onValueChange = viewModel::onPetNameChanged,
-                placeholder = "Firulais",
-                leadingIcon = { Icon(Lucide.Dog, "Pet", tint = Color.Gray) }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
+            // Date Field
             var showDatePicker by remember { mutableStateOf(false) }
             val dateFormatter = remember {
                 DateTimeFormatter.ofPattern("dd/MM/yyyy")
             }
 
-            FormField(
+            com.project.petfinder.bulletin.presentation.ui.FormField(
                 label = "Fecha",
                 value = uiState.date.format(dateFormatter),
                 onValueChange = { },
@@ -136,6 +126,7 @@ fun CreateBulletinScreen(
                     selectedDate = uiState.date
                 )
             }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // Municipality Field
@@ -221,7 +212,7 @@ fun CreateBulletinScreen(
                     .height(120.dp),
                 placeholder = {
                     Text(
-                        "Describe características distintivas de tu mascota",
+                        "Describe dónde y en qué condiciones viste a la mascota",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
@@ -244,7 +235,7 @@ fun CreateBulletinScreen(
             if (uiState.selectedImageUri != null) {
                 AsyncImage(
                     model = uiState.selectedImageUri,
-                    contentDescription = "Selected pet image",
+                    contentDescription = "Imagen del avistamiento",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
@@ -268,9 +259,9 @@ fun CreateBulletinScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Publish Button
+            // Report Button
             Button(
-                onClick = { viewModel.createBulletin() },
+                onClick = { viewModel.reportSighting() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -285,7 +276,7 @@ fun CreateBulletinScreen(
                     )
                 } else {
                     Text(
-                        text = "Publicar",
+                        text = "Reportar",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         fontFamily = Montserrat
@@ -299,7 +290,7 @@ fun CreateBulletinScreen(
 
     LaunchedEffect(uiState.isSuccess) {
         if (uiState.isSuccess) {
-            onBulletinCreated()
+            onSightingReported()
         }
     }
 }
