@@ -23,7 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 import com.project.petfinder.bulletin.presentation.ui.component.DatePicker
 import com.project.petfinder.rescue.presentation.viewmodel.ReportRescueViewModel
 import org.threeten.bp.format.DateTimeFormatter

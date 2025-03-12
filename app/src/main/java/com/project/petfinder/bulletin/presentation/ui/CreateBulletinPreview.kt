@@ -21,7 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 import com.project.petfinder.core.domain.model.Municipality
 import com.project.petfinder.register.presentation.ui.FormField
 import org.threeten.bp.LocalDate

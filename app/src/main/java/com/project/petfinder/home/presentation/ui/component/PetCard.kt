@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.project.petfinder.home.domain.model.Pet
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 
 @Composable
 fun PetCard(

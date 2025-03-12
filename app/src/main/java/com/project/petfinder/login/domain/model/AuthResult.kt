@@ -1,7 +1,6 @@
 package com.project.petfinder.login.domain.model
 
-data class AuthResult(
-    val isSuccess: Boolean,
-    val errorMessage: String? = null,
-    val user: User? = null
-)
+sealed class AuthResult {
+    data class Success(val user: User? = null) : AuthResult()
+    data class Error(val errorMessage: String) : AuthResult()
+}

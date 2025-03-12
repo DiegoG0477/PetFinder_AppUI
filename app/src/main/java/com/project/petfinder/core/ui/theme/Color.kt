@@ -1,4 +1,4 @@
-package com.project.petfinder.ui.theme
+package com.project.petfinder.core.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

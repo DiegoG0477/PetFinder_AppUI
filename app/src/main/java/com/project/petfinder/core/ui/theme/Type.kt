@@ -1,4 +1,4 @@
-package com.project.petfinder.ui.theme
+package com.project.petfinder.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -49,11 +49,14 @@ dependencies {
     implementation(libs.icons.lucide)
 
     implementation(libs.hilt.android)
+    implementation(libs.firebase.storage.ktx)
     kapt(libs.hilt.android.compiler)
 
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.retrofit)
 
     implementation(libs.coil.compose)
 

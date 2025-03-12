@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.verticalScroll
 

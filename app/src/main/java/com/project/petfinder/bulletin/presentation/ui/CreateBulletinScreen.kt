@@ -24,7 +24,7 @@ import coil3.compose.AsyncImage
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
 import com.project.petfinder.bulletin.presentation.viewmodel.CreateBulletinViewModel
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 import com.project.petfinder.bulletin.presentation.ui.component.DatePicker
 import org.threeten.bp.format.DateTimeFormatter
 

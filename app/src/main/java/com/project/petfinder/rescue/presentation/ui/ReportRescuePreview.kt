@@ -21,7 +21,7 @@ import com.composables.icons.lucide.*
 import com.project.petfinder.R
 import com.project.petfinder.core.domain.model.Municipality
 import com.project.petfinder.register.presentation.ui.FormField
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 

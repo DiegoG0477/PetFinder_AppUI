@@ -23,7 +23,7 @@ import com.project.petfinder.R
 import com.project.petfinder.home.domain.model.Pet
 import com.project.petfinder.home.presentation.ui.component.PetCard
 import com.project.petfinder.home.presentation.viewmodel.HomeViewModel
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 
 @Composable
 fun HomeScreen(

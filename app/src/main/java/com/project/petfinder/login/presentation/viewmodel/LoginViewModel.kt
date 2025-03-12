@@ -3,6 +3,7 @@ package com.project.petfinder.login.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.petfinder.login.domain.repository.AuthRepository
+import com.project.petfinder.login.domain.model.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,15 +31,26 @@ class LoginViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
 
             try {
-                val result = authRepository.login(_uiState.value.email, _uiState.value.password)
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    isSuccess = result.isSuccess,
-                    errorMessage = if (!result.isSuccess) result.errorMessage else null
-                )
+                when (val result = authRepository.login(_uiState.value.email, _uiState.value.password)) {
+                    is AuthResult.Success -> {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            isSuccess = true,
+                            errorMessage = null
+                        )
+                    }
+                    is AuthResult.Error -> {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            isSuccess = false,
+                            errorMessage = result.errorMessage
+                        )
+                    }
+                }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
+                    isSuccess = false,
                     errorMessage = e.message ?: "Error desconocido al iniciar sesión"
                 )
             }

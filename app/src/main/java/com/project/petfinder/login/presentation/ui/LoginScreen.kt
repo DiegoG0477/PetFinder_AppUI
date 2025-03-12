@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.composables.icons.lucide.*
 import com.project.petfinder.R
 import com.project.petfinder.login.presentation.viewmodel.LoginViewModel
-import com.project.petfinder.ui.theme.Montserrat
+import com.project.petfinder.core.ui.theme.Montserrat
 
 @Composable
 fun LoginScreen(
