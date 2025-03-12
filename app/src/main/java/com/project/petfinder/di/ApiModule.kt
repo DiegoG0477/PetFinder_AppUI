@@ -1,17 +1,22 @@
 package com.project.petfinder.di
 
+import com.project.petfinder.BuildConfig
+import com.project.petfinder.login.data.AuthApiService
 import com.project.petfinder.bulletin.data.BulletinApiService
 import com.project.petfinder.core.data.LocationApiService
 import com.project.petfinder.home.data.PetApiService
-import com.project.petfinder.rescue.data.RescueApiService
-import com.project.petfinder.login.data.AuthApiService
 import com.project.petfinder.register.data.RegisterApiService
+import com.project.petfinder.rescue.data.RescueApiService
 import com.project.petfinder.sighting.data.SightingApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -20,14 +25,35 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideBulletinApiService(retrofit: Retrofit): BulletinApiService {
-        return retrofit.create(BulletinApiService::class.java)
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
     }
 
     @Provides
     @Singleton
-    fun providePetApiService(retrofit: Retrofit): PetApiService {
-        return retrofit.create(PetApiService::class.java)
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.API_URL) // Asegúrate de tener esta variable en tu build.gradle
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     @Provides
@@ -44,6 +70,12 @@ object ApiModule {
 
     @Provides
     @Singleton
+    fun providePetApiService(retrofit: Retrofit): PetApiService {
+        return retrofit.create(PetApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideRescueApiService(retrofit: Retrofit): RescueApiService {
         return retrofit.create(RescueApiService::class.java)
     }
@@ -52,6 +84,12 @@ object ApiModule {
     @Singleton
     fun provideSightingApiService(retrofit: Retrofit): SightingApiService {
         return retrofit.create(SightingApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBulletinApiService(retrofit: Retrofit): BulletinApiService {
+        return retrofit.create(BulletinApiService::class.java)
     }
 
     @Provides

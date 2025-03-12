@@ -11,6 +11,8 @@ android {
     namespace = "com.project.petfinder"
     compileSdk = 35
 
+    android.buildFeatures.buildConfig = true
+
     defaultConfig {
         applicationId = "com.project.petfinder"
         minSdk = 26
@@ -19,6 +21,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_URL", "\"https://tu-api-base-url.com/\"")
     }
 
     buildTypes {
@@ -51,6 +55,11 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.firebase.storage.ktx)
     kapt(libs.hilt.android.compiler)
+
+    implementation(libs.converter.gson)
+
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     implementation(libs.androidx.navigation.compose)
 
