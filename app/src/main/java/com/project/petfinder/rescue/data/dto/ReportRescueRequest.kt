@@ -1,4 +1,4 @@
-package com.project.petfinder.rescue.data.model
+package com.project.petfinder.rescue.data.dto
 
 import org.threeten.bp.LocalDate
 

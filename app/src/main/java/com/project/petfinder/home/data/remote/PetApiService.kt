@@ -1,7 +1,7 @@
-package com.project.petfinder.home.data
+package com.project.petfinder.home.data.remote
 
-import com.project.petfinder.home.data.model.PetResponse
-import com.project.petfinder.home.data.model.ReportPetRequest
+import com.project.petfinder.home.data.dto.PetResponse
+import com.project.petfinder.home.data.dto.ReportPetRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

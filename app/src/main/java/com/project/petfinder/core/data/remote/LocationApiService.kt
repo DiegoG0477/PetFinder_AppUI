@@ -1,6 +1,6 @@
-package com.project.petfinder.core.data
+package com.project.petfinder.core.data.remote
 
-import com.project.petfinder.core.data.model.MunicipalityResponse
+import com.project.petfinder.core.data.dto.MunicipalityResponse
 import retrofit2.http.GET
 
 interface LocationApiService {

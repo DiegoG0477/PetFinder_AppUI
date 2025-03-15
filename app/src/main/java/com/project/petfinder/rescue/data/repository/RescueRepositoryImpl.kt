@@ -2,8 +2,8 @@ package com.project.petfinder.rescue.data.repository
 
 import android.net.Uri
 import com.project.petfinder.core.data.storage.FileUploader
-import com.project.petfinder.rescue.data.RescueApiService
-import com.project.petfinder.rescue.data.model.ReportRescueRequest
+import com.project.petfinder.rescue.data.remote.RescueApiService
+import com.project.petfinder.rescue.data.dto.ReportRescueRequest
 import com.project.petfinder.rescue.domain.model.Rescue
 import com.project.petfinder.rescue.domain.repository.RescueRepository
 import kotlinx.coroutines.Dispatchers

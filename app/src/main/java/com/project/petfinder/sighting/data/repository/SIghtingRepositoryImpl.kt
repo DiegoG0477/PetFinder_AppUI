@@ -2,8 +2,8 @@ package com.project.petfinder.sighting.data.repository
 
 import android.net.Uri
 import com.project.petfinder.core.data.storage.FileUploader
-import com.project.petfinder.sighting.data.SightingApiService
-import com.project.petfinder.sighting.data.model.ReportSightingRequest
+import com.project.petfinder.sighting.data.remote.SightingApiService
+import com.project.petfinder.sighting.data.dto.ReportSightingRequest
 import com.project.petfinder.sighting.domain.model.Sighting
 import com.project.petfinder.sighting.domain.repository.SightingRepository
 import kotlinx.coroutines.Dispatchers

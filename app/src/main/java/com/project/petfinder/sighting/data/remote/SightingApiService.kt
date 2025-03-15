@@ -1,7 +1,7 @@
-package com.project.petfinder.sighting.data
+package com.project.petfinder.sighting.data.remote
 
-import com.project.petfinder.sighting.data.model.ReportSightingRequest
-import com.project.petfinder.sighting.data.model.SightingResponse
+import com.project.petfinder.sighting.data.dto.ReportSightingRequest
+import com.project.petfinder.sighting.data.dto.SightingResponse
 import retrofit2.http.*
 
 interface SightingApiService {

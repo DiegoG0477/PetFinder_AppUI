@@ -1,4 +1,4 @@
-package com.project.petfinder.sighting.data.model
+package com.project.petfinder.sighting.data.dto
 
 import com.project.petfinder.sighting.domain.model.Sighting
 import org.threeten.bp.LocalDate

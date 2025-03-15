@@ -1,4 +1,4 @@
-package com.project.petfinder.home.data.model
+package com.project.petfinder.home.data.dto
 
 data class PetResponse(
     val id: String,

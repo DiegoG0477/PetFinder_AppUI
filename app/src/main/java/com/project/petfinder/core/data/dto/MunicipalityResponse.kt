@@ -1,4 +1,4 @@
-package com.project.petfinder.core.data.model
+package com.project.petfinder.core.data.dto
 
 import com.project.petfinder.core.domain.model.Municipality
 

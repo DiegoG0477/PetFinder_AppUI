@@ -1,4 +1,4 @@
-package com.project.petfinder.login.data.model
+package com.project.petfinder.login.data.dto
 
 data class LoginRequest(
     val email: String,

@@ -1,13 +1,13 @@
 package com.project.petfinder.di
 
 import com.project.petfinder.BuildConfig
-import com.project.petfinder.login.data.AuthApiService
-import com.project.petfinder.bulletin.data.BulletinApiService
-import com.project.petfinder.core.data.LocationApiService
-import com.project.petfinder.home.data.PetApiService
-import com.project.petfinder.register.data.RegisterApiService
-import com.project.petfinder.rescue.data.RescueApiService
-import com.project.petfinder.sighting.data.SightingApiService
+import com.project.petfinder.login.data.remote.AuthApiService
+import com.project.petfinder.bulletin.data.remote.BulletinApiService
+import com.project.petfinder.core.data.remote.LocationApiService
+import com.project.petfinder.home.data.remote.PetApiService
+import com.project.petfinder.register.data.remote.RegisterApiService
+import com.project.petfinder.rescue.data.remote.RescueApiService
+import com.project.petfinder.sighting.data.remote.SightingApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

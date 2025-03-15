@@ -1,8 +1,8 @@
 package com.project.petfinder.home.data.repository
 
-import com.project.petfinder.home.data.PetApiService
-import com.project.petfinder.home.data.model.PetResponse
-import com.project.petfinder.home.data.model.ReportPetRequest
+import com.project.petfinder.home.data.remote.PetApiService
+import com.project.petfinder.home.data.dto.PetResponse
+import com.project.petfinder.home.data.dto.ReportPetRequest
 import com.project.petfinder.home.domain.model.Pet
 import com.project.petfinder.home.domain.repository.PetRepository
 import javax.inject.Inject

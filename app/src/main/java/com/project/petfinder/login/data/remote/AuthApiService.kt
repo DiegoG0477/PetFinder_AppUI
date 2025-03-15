@@ -1,7 +1,7 @@
-package com.project.petfinder.login.data
+package com.project.petfinder.login.data.remote
 
-import com.project.petfinder.login.data.model.LoginRequest
-import com.project.petfinder.login.data.model.LoginResponse
+import com.project.petfinder.login.data.dto.LoginRequest
+import com.project.petfinder.login.data.dto.LoginResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 

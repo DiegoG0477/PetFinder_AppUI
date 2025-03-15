@@ -1,7 +1,7 @@
-package com.project.petfinder.bulletin.data
+package com.project.petfinder.bulletin.data.remote
 
-import com.project.petfinder.bulletin.data.model.BulletinResponse
-import com.project.petfinder.bulletin.data.model.CreateBulletinRequest
+import com.project.petfinder.bulletin.data.dto.BulletinResponse
+import com.project.petfinder.bulletin.data.dto.CreateBulletinRequest
 import retrofit2.http.*
 
 interface BulletinApiService {

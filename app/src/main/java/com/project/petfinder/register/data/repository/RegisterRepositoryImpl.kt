@@ -1,8 +1,8 @@
 package com.project.petfinder.register.data.repository
 
-import com.project.petfinder.register.data.RegisterApiService
-import com.project.petfinder.register.data.model.RegisterRequest
-import com.project.petfinder.register.data.model.UserResponse
+import com.project.petfinder.register.data.remote.RegisterApiService
+import com.project.petfinder.register.data.dto.RegisterRequest
+import com.project.petfinder.register.data.dto.UserResponse
 import com.project.petfinder.register.domain.model.RegisterResult
 import com.project.petfinder.register.domain.model.User
 import com.project.petfinder.register.domain.repository.RegisterRepository

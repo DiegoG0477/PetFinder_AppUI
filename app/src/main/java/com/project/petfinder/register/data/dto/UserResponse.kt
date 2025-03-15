@@ -1,4 +1,4 @@
-package com.project.petfinder.register.data.model
+package com.project.petfinder.register.data.dto
 
 data class UserResponse(
     val id: String,

@@ -1,7 +1,7 @@
 package com.project.petfinder.login.data.repository
 
-import com.project.petfinder.login.data.AuthApiService
-import com.project.petfinder.login.data.model.LoginRequest
+import com.project.petfinder.login.data.remote.AuthApiService
+import com.project.petfinder.login.data.dto.LoginRequest
 import com.project.petfinder.login.domain.model.AuthResult
 import com.project.petfinder.login.domain.repository.AuthRepository
 import kotlinx.coroutines.Dispatchers

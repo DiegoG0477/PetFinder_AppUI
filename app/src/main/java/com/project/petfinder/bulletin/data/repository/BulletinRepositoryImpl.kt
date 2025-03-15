@@ -1,9 +1,9 @@
 package com.project.petfinder.bulletin.data.repository
 
 import android.net.Uri
-import com.project.petfinder.bulletin.data.BulletinApiService
-import com.project.petfinder.bulletin.data.model.CreateBulletinRequest
-import com.project.petfinder.bulletin.data.model.BulletinResponse
+import com.project.petfinder.bulletin.data.remote.BulletinApiService
+import com.project.petfinder.bulletin.data.dto.CreateBulletinRequest
+import com.project.petfinder.bulletin.data.dto.BulletinResponse
 import com.project.petfinder.bulletin.domain.model.Bulletin
 import com.project.petfinder.bulletin.domain.repository.BulletinRepository
 import org.threeten.bp.LocalDate
