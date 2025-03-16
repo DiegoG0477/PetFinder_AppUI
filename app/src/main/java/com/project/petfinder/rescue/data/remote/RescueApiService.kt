@@ -1,7 +1,8 @@
 package com.project.petfinder.rescue.data.remote
 
-import com.project.petfinder.rescue.data.dto.ReportRescueRequest
-import com.project.petfinder.rescue.data.dto.RescueResponse
+import com.project.petfinder.core.data.dto.HttpResponseDto
+import com.project.petfinder.rescue.data.dto.ReportRescueDto
+import com.project.petfinder.rescue.data.dto.RescueDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -9,14 +10,14 @@ import retrofit2.http.Path
 
 interface RescueApiService {
     @POST("rescues")
-    suspend fun reportRescue(@Body request: ReportRescueRequest): RescueResponse
+    suspend fun reportRescue(@Body request: ReportRescueDto): HttpResponseDto
 
     @GET("rescues/{rescueId}")
-    suspend fun getRescueById(@Path("rescueId") rescueId: String): RescueResponse
+    suspend fun getRescueById(@Path("rescueId") rescueId: String): RescueDto
 
     @GET("pets/{petId}/rescues")
-    suspend fun getRescuesForPet(@Path("petId") petId: String): List<RescueResponse>
+    suspend fun getRescuesForPet(@Path("petId") petId: String): List<RescueDto>
 
     @GET("users/{userId}/rescues")
-    suspend fun getRescuesByUser(@Path("userId") userId: String): List<RescueResponse>
+    suspend fun getRescuesByUser(@Path("userId") userId: String): List<RescueDto>
 }

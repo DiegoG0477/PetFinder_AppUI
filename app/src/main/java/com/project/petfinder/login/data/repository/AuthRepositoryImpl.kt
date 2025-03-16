@@ -1,7 +1,7 @@
 package com.project.petfinder.login.data.repository
 
 import com.project.petfinder.login.data.remote.AuthApiService
-import com.project.petfinder.login.data.dto.LoginRequest
+import com.project.petfinder.login.data.dto.LoginRequestDto
 import com.project.petfinder.login.domain.model.AuthResult
 import com.project.petfinder.login.domain.repository.AuthRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String): AuthResult = withContext(Dispatchers.IO) {
         try {
-            val response = authApiService.login(LoginRequest(email, password))
+            val response = authApiService.login(LoginRequestDto(email, password))
             if (response.token.isNotEmpty()) {
                 authPreferences.saveAuthToken(response.token)
                 AuthResult.Success()  // or AuthResult.Success(user) if you have user data

@@ -27,7 +27,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
-                val pets = petRepository.getLostPets()
+                val result = petRepository.getLostPets()
+                val pets = result.getOrElse {
+                    throw it
+                }
                 _uiState.update {
                     it.copy(
                         pets = pets,

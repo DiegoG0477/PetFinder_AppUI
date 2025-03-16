@@ -1,10 +1,11 @@
 package com.project.petfinder.sighting.data.dto
 
-import org.threeten.bp.LocalDate
+import kotlinx.serialization.Serializable
 
-data class ReportSightingRequest(
+@Serializable
+data class ReportSightingDto(
     val petId: String,
-    val date: LocalDate,
+    val date: String,
     val municipalityId: String,
     val additionalInfo: String,
     val imageUrl: String?

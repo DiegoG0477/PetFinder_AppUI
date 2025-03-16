@@ -2,8 +2,10 @@ package com.project.petfinder.sighting.data.repository
 
 import android.net.Uri
 import com.project.petfinder.core.data.storage.FileUploader
+import com.project.petfinder.core.domain.model.OperationResult
 import com.project.petfinder.sighting.data.remote.SightingApiService
-import com.project.petfinder.sighting.data.dto.ReportSightingRequest
+import com.project.petfinder.sighting.data.dto.ReportSightingDto
+import com.project.petfinder.sighting.data.mapper.toDomain
 import com.project.petfinder.sighting.domain.model.Sighting
 import com.project.petfinder.sighting.domain.repository.SightingRepository
 import kotlinx.coroutines.Dispatchers
@@ -22,19 +24,24 @@ class SightingRepositoryImpl @Inject constructor(
         municipalityId: String,
         additionalInfo: String,
         imageUri: Uri?
-    ): Result<Sighting> = withContext(Dispatchers.IO) {
+    ): Result<OperationResult> = withContext(Dispatchers.IO) {
         try {
             val imageUrl = imageUri?.let { fileUploader.uploadFile(it) }
 
-            val request = ReportSightingRequest(
+            val request = ReportSightingDto(
                 petId = petId,
-                date = date,
+                date = date.toString(),
                 municipalityId = municipalityId,
                 additionalInfo = additionalInfo,
                 imageUrl = imageUrl
             )
 
-            Result.success(apiService.reportSighting(request).toDomain())
+            val response = apiService.reportSighting(request)
+            if (response.success) {
+                Result.success(OperationResult.Success(response.message))
+            } else {
+                Result.success(OperationResult.Error(response.message))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -67,10 +74,15 @@ class SightingRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteSighting(id: String): Result<Unit> =
+    override suspend fun deleteSighting(id: String): Result<OperationResult> =
         withContext(Dispatchers.IO) {
             try {
-                Result.success(apiService.deleteSighting(id))
+                val response = apiService.deleteSighting(id)
+                if (response.success) {
+                    Result.success(OperationResult.Success(response.message))
+                } else {
+                    Result.success(OperationResult.Error(response.message))
+                }
             } catch (e: Exception) {
                 Result.failure(e)
             }

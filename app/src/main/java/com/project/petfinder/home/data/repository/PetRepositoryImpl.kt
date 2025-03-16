@@ -1,10 +1,11 @@
 package com.project.petfinder.home.data.repository
 
 import com.project.petfinder.home.data.remote.PetApiService
-import com.project.petfinder.home.data.dto.PetResponse
-import com.project.petfinder.home.data.dto.ReportPetRequest
+import com.project.petfinder.home.data.dto.ReportPetDto
+import com.project.petfinder.home.data.mapper.toDomain
 import com.project.petfinder.home.domain.model.Pet
 import com.project.petfinder.home.domain.repository.PetRepository
+import com.project.petfinder.core.domain.model.OperationResult
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,37 +14,37 @@ class PetRepositoryImpl @Inject constructor(
     private val apiService: PetApiService
 ) : PetRepository {
 
-    override suspend fun getLostPets(): List<Pet> = withContext(Dispatchers.IO) {
+    override suspend fun getLostPets(): Result<List<Pet>> = withContext(Dispatchers.IO) {
         try {
-            apiService.getLostPets().map { it.toDomain() }
+            Result.success(apiService.getLostPets().map { it.toDomain() })
         } catch (e: Exception) {
-            emptyList()
+            Result.failure(e)
         }
     }
 
-    override suspend fun reportRescue(petId: String) = withContext(Dispatchers.IO) {
+    override suspend fun reportRescue(petId: String): Result<OperationResult> = withContext(Dispatchers.IO) {
         try {
-            apiService.reportRescue(ReportPetRequest(petId))
+            val response = apiService.reportRescue(ReportPetDto(petId))
+            if (response.success) {
+                Result.success(OperationResult.Success(response.message))
+            } else {
+                Result.success(OperationResult.Error(response.message))
+            }
         } catch (e: Exception) {
-            // Manejar error según necesidades
+            Result.failure(e)
         }
     }
 
-    override suspend fun reportSighting(petId: String) = withContext(Dispatchers.IO) {
+    override suspend fun reportSighting(petId: String): Result<OperationResult> = withContext(Dispatchers.IO) {
         try {
-            apiService.reportSighting(ReportPetRequest(petId))
+            val response = apiService.reportSighting(ReportPetDto(petId))
+            if (response.success) {
+                Result.success(OperationResult.Success(response.message))
+            } else {
+                Result.success(OperationResult.Error(response.message))
+            }
         } catch (e: Exception) {
-            // Manejar error según necesidades
+            Result.failure(e)
         }
     }
-
-    private fun PetResponse.toDomain(): Pet = Pet(
-        id = this.id,
-        name = this.name,
-        description = this.description ?: "",
-        imageUrl = this.imageUrl,
-        ownerName = this.ownerName ?: "",
-        lastSeenLocation = this.lastSeenLocation,
-        lastSeenDate = this.lastSeenDate ?: ""
-    )
 }

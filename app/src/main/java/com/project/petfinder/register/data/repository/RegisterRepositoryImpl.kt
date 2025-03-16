@@ -1,10 +1,9 @@
 package com.project.petfinder.register.data.repository
 
 import com.project.petfinder.register.data.remote.RegisterApiService
-import com.project.petfinder.register.data.dto.RegisterRequest
-import com.project.petfinder.register.data.dto.UserResponse
+import com.project.petfinder.register.data.dto.RegisterRequestDto
+import com.project.petfinder.register.data.mapper.toDomain
 import com.project.petfinder.register.domain.model.RegisterResult
-import com.project.petfinder.register.domain.model.User
 import com.project.petfinder.register.domain.repository.RegisterRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,7 +22,7 @@ class RegisterRepositoryImpl @Inject constructor(
         municipalityId: String
     ): RegisterResult = withContext(Dispatchers.IO) {
         try {
-            val request = RegisterRequest(
+            val request = RegisterRequestDto(
                 name = name,
                 email = email,
                 password = password,
@@ -33,7 +32,7 @@ class RegisterRepositoryImpl @Inject constructor(
             if (response.success) {
                 RegisterResult(
                     isSuccess = true,
-                    user = response.user?.toDomainUser()
+                    user = response.user?.toDomain()
                 )
             } else {
                 RegisterResult(
@@ -47,14 +46,5 @@ class RegisterRepositoryImpl @Inject constructor(
                 errorMessage = e.message ?: "Unknown error occurred"
             )
         }
-    }
-
-    private fun UserResponse.toDomainUser(): User {
-        return User(
-            id = id,
-            name = name,
-            email = email,
-            municipalityId = municipalityId
-        )
     }
 }

@@ -2,9 +2,10 @@ package com.project.petfinder.bulletin.data.repository
 
 import android.net.Uri
 import com.project.petfinder.bulletin.data.remote.BulletinApiService
-import com.project.petfinder.bulletin.data.dto.CreateBulletinRequest
-import com.project.petfinder.bulletin.data.dto.BulletinResponse
+import com.project.petfinder.bulletin.data.dto.NewBulletinDto
+import com.project.petfinder.bulletin.data.dto.mapper.toDomain
 import com.project.petfinder.bulletin.domain.model.Bulletin
+import com.project.petfinder.core.domain.model.OperationResult
 import com.project.petfinder.bulletin.domain.repository.BulletinRepository
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
@@ -21,10 +22,10 @@ class BulletinRepositoryImpl @Inject constructor(
         municipalityId: String,
         additionalInfo: String,
         imageUri: Uri?
-    ): Result<Bulletin> = withContext(Dispatchers.IO) {
+    ): Result<OperationResult> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.createBulletin(
-                CreateBulletinRequest(
+                NewBulletinDto(
                     petName = petName,
                     date = date.toString(),
                     municipalityId = municipalityId,
@@ -32,7 +33,11 @@ class BulletinRepositoryImpl @Inject constructor(
                     imageUrl = imageUri?.toString()
                 )
             )
-            Result.success(response.toDomain())
+            if (response.success) {
+                Result.success(OperationResult.Success(response.message))
+            } else {
+                Result.success(OperationResult.Error(response.message))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -74,10 +79,14 @@ class BulletinRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteBulletin(id: String): Result<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun deleteBulletin(id: String): Result<OperationResult> = withContext(Dispatchers.IO) {
         try {
-            apiService.deleteBulletin(id)
-            Result.success(Unit)
+            val response = apiService.deleteBulletin(id)
+            if (response.success) {
+                Result.success(OperationResult.Success(response.message))
+            } else {
+                Result.success(OperationResult.Error(response.message))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -90,11 +99,11 @@ class BulletinRepositoryImpl @Inject constructor(
         municipalityId: String,
         additionalInfo: String,
         imageUri: Uri?
-    ): Result<Bulletin> = withContext(Dispatchers.IO) {
+    ): Result<OperationResult> = withContext(Dispatchers.IO) {
         try {
             val response = apiService.updateBulletin(
                 id,
-                CreateBulletinRequest(
+                NewBulletinDto(
                     petName = petName,
                     date = date.toString(),
                     municipalityId = municipalityId,
@@ -102,20 +111,13 @@ class BulletinRepositoryImpl @Inject constructor(
                     imageUrl = imageUri?.toString()
                 )
             )
-            Result.success(response.toDomain())
+            if (response.success) {
+                Result.success(OperationResult.Success(response.message))
+            } else {
+                Result.success(OperationResult.Error(response.message))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
-
-    private fun BulletinResponse.toDomain(): Bulletin = Bulletin(
-        id = this.id,
-        petName = this.petName,
-        date = LocalDate.parse(this.date),
-        municipalityId = this.municipalityId,
-        municipalityName = "",
-        additionalInfo = this.additionalInfo,
-        imageUrl = this.imageUrl?.let { Uri.parse(it) }.toString(),
-        userId = ""
-    )
 }

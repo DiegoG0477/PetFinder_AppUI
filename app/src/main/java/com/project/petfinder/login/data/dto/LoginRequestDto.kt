@@ -1,6 +1,9 @@
 package com.project.petfinder.login.data.dto
 
-data class LoginRequest(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class LoginRequestDto(
     val email: String,
     val password: String
 )

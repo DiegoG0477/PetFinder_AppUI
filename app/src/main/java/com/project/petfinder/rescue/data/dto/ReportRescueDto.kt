@@ -1,10 +1,11 @@
 package com.project.petfinder.rescue.data.dto
 
-import org.threeten.bp.LocalDate
+import kotlinx.serialization.Serializable
 
-data class ReportRescueRequest(
+@Serializable
+data class ReportRescueDto(
     val petId: String,
-    val date: LocalDate,
+    val date: String,
     val municipalityId: String,
     val additionalInfo: String,
     val imageUrl: String?

@@ -1,6 +1,9 @@
 package com.project.petfinder.home.data.dto
 
-data class PetResponse(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class PetDto(
     val id: String,
     val name: String,
     val description: String?,

@@ -1,6 +1,7 @@
 package com.project.petfinder.rescue.domain.repository
 
 import android.net.Uri
+import com.project.petfinder.core.domain.model.OperationResult
 import com.project.petfinder.rescue.domain.model.Rescue
 import org.threeten.bp.LocalDate
 
@@ -11,11 +12,11 @@ interface RescueRepository {
         municipalityId: String,
         additionalInfo: String,
         imageUri: Uri?
-    ): Rescue
+    ): Result<OperationResult>
 
-    suspend fun getRescueById(rescueId: String): Rescue
+    suspend fun getRescueById(rescueId: String): Result<Rescue>
 
-    suspend fun getRescuesForPet(petId: String): List<Rescue>
+    suspend fun getRescuesForPet(petId: String): Result<List<Rescue>>
 
-    suspend fun getRescuesByUser(userId: String): List<Rescue>
+    suspend fun getRescuesByUser(userId: String): Result<List<Rescue>>
 }

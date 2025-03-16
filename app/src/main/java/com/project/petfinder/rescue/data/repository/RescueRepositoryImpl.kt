@@ -3,8 +3,10 @@ package com.project.petfinder.rescue.data.repository
 import android.net.Uri
 import com.project.petfinder.core.data.storage.FileUploader
 import com.project.petfinder.rescue.data.remote.RescueApiService
-import com.project.petfinder.rescue.data.dto.ReportRescueRequest
+import com.project.petfinder.rescue.data.dto.ReportRescueDto
+import com.project.petfinder.rescue.data.mapper.toDomain
 import com.project.petfinder.rescue.domain.model.Rescue
+import com.project.petfinder.core.domain.model.OperationResult
 import com.project.petfinder.rescue.domain.repository.RescueRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,45 +24,50 @@ class RescueRepositoryImpl @Inject constructor(
         municipalityId: String,
         additionalInfo: String,
         imageUri: Uri?
-    ): Rescue = withContext(Dispatchers.IO) {
+    ): Result<OperationResult> = withContext(Dispatchers.IO) {
         try {
             val imageUrl = imageUri?.let { fileUploader.uploadFile(it) }
 
-            val request = ReportRescueRequest(
+            val request = ReportRescueDto(
                 petId = petId,
-                date = date,
+                date = date.toString(),
                 municipalityId = municipalityId,
                 additionalInfo = additionalInfo,
                 imageUrl = imageUrl
             )
 
-            apiService.reportRescue(request).toDomain()
+            val response = apiService.reportRescue(request)
+            if (response.success) {
+                Result.success(OperationResult.Success(response.message))
+            } else {
+                Result.success(OperationResult.Error(response.message))
+            }
         } catch (e: Exception) {
-            throw e // O manejar el error según se requiera
+            Result.failure(e)
         }
     }
 
-    override suspend fun getRescueById(rescueId: String): Rescue = withContext(Dispatchers.IO) {
+    override suspend fun getRescueById(rescueId: String): Result<Rescue> = withContext(Dispatchers.IO) {
         try {
-            apiService.getRescueById(rescueId).toDomain()
+            Result.success(apiService.getRescueById(rescueId).toDomain())
         } catch (e: Exception) {
-            throw e
+            Result.failure(e)
         }
     }
 
-    override suspend fun getRescuesForPet(petId: String): List<Rescue> = withContext(Dispatchers.IO) {
+    override suspend fun getRescuesForPet(petId: String): Result<List<Rescue>> = withContext(Dispatchers.IO) {
         try {
-            apiService.getRescuesForPet(petId).map { it.toDomain() }
+            Result.success(apiService.getRescuesForPet(petId).map { it.toDomain() })
         } catch (e: Exception) {
-            emptyList()
+            Result.failure(e)
         }
     }
 
-    override suspend fun getRescuesByUser(userId: String): List<Rescue> = withContext(Dispatchers.IO) {
+    override suspend fun getRescuesByUser(userId: String): Result<List<Rescue>> = withContext(Dispatchers.IO) {
         try {
-            apiService.getRescuesByUser(userId).map { it.toDomain() }
+            Result.success(apiService.getRescuesByUser(userId).map { it.toDomain() })
         } catch (e: Exception) {
-            emptyList()
+            Result.failure(e)
         }
     }
 }

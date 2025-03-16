@@ -1,6 +1,7 @@
 package com.project.petfinder.sighting.domain.repository
 
 import android.net.Uri
+import com.project.petfinder.core.domain.model.OperationResult
 import com.project.petfinder.sighting.domain.model.Sighting
 import org.threeten.bp.LocalDate
 
@@ -11,7 +12,7 @@ interface SightingRepository {
         municipalityId: String,
         additionalInfo: String,
         imageUri: Uri?
-    ): Result<Sighting>
+    ): Result<OperationResult>
 
     suspend fun getPetSightings(petId: String): Result<List<Sighting>>
 
@@ -19,5 +20,5 @@ interface SightingRepository {
 
     suspend fun getSighting(id: String): Result<Sighting>
 
-    suspend fun deleteSighting(id: String): Result<Unit>
+    suspend fun deleteSighting(id: String): Result<OperationResult>
 }
