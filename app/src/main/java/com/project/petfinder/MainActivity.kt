@@ -14,10 +14,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.project.petfinder.core.ui.component.MultiActionFAB
 import com.project.petfinder.core.ui.navigation.NavItem
-import com.project.petfinder.home.presentation.ui.HomeScreen
-import com.project.petfinder.bulletin.presentation.ui.CreateBulletinScreen
-import com.project.petfinder.rescue.presentation.ui.ReportRescueScreen
-import com.project.petfinder.sighting.presentation.ui.ReportSightingScreen
+import com.project.petfinder.features.home.presentation.ui.HomeScreen
+import com.project.petfinder.features.bulletin.presentation.ui.CreateBulletinScreen
+import com.project.petfinder.features.rescue.presentation.ui.ReportRescueScreen
+import com.project.petfinder.features.sighting.presentation.ui.ReportSightingScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
