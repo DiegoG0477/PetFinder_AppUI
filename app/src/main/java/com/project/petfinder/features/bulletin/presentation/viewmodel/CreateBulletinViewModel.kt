@@ -1,82 +1,81 @@
 package com.project.petfinder.features.bulletin.presentation.viewmodel
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.petfinder.core.domain.model.Municipality
-import com.project.petfinder.features.bulletin.domain.repository.BulletinRepository
-import com.project.petfinder.core.domain.repository.LocationRepository
+import com.project.petfinder.core.domain.model.OperationResult
+import com.project.petfinder.features.bulletin.domain.usecase.CreateBulletinUseCase
+import com.project.petfinder.core.domain.usecase.GetMunicipalitiesUseCase
+import com.project.petfinder.features.bulletin.domain.usecase.ValidateBulletinInputUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateBulletinViewModel @Inject constructor(
-    private val bulletinRepository: BulletinRepository,
-    private val locationRepository: LocationRepository
+    private val getMunicipalitiesUseCase: GetMunicipalitiesUseCase,
+    private val createBulletinUseCase: CreateBulletinUseCase,
+    private val validateBulletinInputUseCase: ValidateBulletinInputUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CreateBulletinUiState())
     val uiState: StateFlow<CreateBulletinUiState> = _uiState
 
-    init {
-        loadMunicipalities()
-    }
+    fun createBulletin() {
+        val currentState = _uiState.value
 
-    private fun loadMunicipalities() {
-        viewModelScope.launch {
-            try {
-                val municipalities = locationRepository.getMunicipalities()
-                _uiState.value = _uiState.value.copy(municipalities = municipalities)
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    errorMessage = "Error al cargar municipios: ${e.message}"
-                )
+        when (val validationResult = validateBulletinInputUseCase(
+            currentState.petName,
+            currentState.selectedMunicipality,
+            currentState.selectedImageUri
+        )) {
+            is OperationResult.Error -> {
+                _uiState.value = currentState.copy(errorMessage = validationResult.message)
+                return
+            }
+            is OperationResult.Success -> {
+                submitBulletin()
             }
         }
     }
 
-    fun onPetNameChanged(name: String) {
-        _uiState.value = _uiState.value.copy(petName = name)
-    }
-
-    fun onDateChanged(date: LocalDate) {
-        _uiState.value = _uiState.value.copy(date = date)
-    }
-
-    fun onMunicipalitySelected(municipality: Municipality) {
-        _uiState.value = _uiState.value.copy(selectedMunicipality = municipality)
-    }
-
-    fun onAdditionalInfoChanged(info: String) {
-        _uiState.value = _uiState.value.copy(additionalInfo = info)
-    }
-
-    fun onImageSelected(uri: Uri) {
-        _uiState.value = _uiState.value.copy(selectedImageUri = uri)
-    }
-
-    fun createBulletin() {
-        if (!validateInputs()) return
-
+    private fun submitBulletin() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
 
             try {
-                bulletinRepository.createBulletin(
+                val result = createBulletinUseCase(
                     petName = _uiState.value.petName,
                     date = _uiState.value.date,
                     municipalityId = (_uiState.value.selectedMunicipality?.id ?: "").toString(),
                     additionalInfo = _uiState.value.additionalInfo,
-                    imageUri = _uiState.value.selectedImageUri
+                    imageUri = _uiState.value.selectedImageUri!!
                 )
 
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    isSuccess = true
+                result.fold(
+                    onSuccess = { operationResult ->
+                        when (operationResult) {
+                            is OperationResult.Success -> {
+                                _uiState.value = _uiState.value.copy(
+                                    isLoading = false,
+                                    isSuccess = true
+                                )
+                            }
+                            is OperationResult.Error -> {
+                                _uiState.value = _uiState.value.copy(
+                                    isLoading = false,
+                                    errorMessage = operationResult.message
+                                )
+                            }
+                        }
+                    },
+                    onFailure = { exception ->
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            errorMessage = exception.message ?: "Error al crear el boletín"
+                        )
+                    }
                 )
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
@@ -86,38 +85,4 @@ class CreateBulletinViewModel @Inject constructor(
             }
         }
     }
-
-    private fun validateInputs(): Boolean {
-        if (_uiState.value.petName.isBlank()) {
-            _uiState.value = _uiState.value.copy(
-                errorMessage = "El nombre de la mascota es requerido"
-            )
-            return false
-        }
-        if (_uiState.value.selectedMunicipality == null) {
-            _uiState.value = _uiState.value.copy(
-                errorMessage = "Selecciona un municipio"
-            )
-            return false
-        }
-        if (_uiState.value.selectedImageUri == null) {
-            _uiState.value = _uiState.value.copy(
-                errorMessage = "La imagen es requerida"
-            )
-            return false
-        }
-        return true
-    }
 }
-
-data class CreateBulletinUiState(
-    val petName: String = "",
-    val date: LocalDate = LocalDate.now(),
-    val municipalities: List<Municipality> = emptyList(),
-    val selectedMunicipality: Municipality? = null,
-    val additionalInfo: String = "",
-    val selectedImageUri: Uri? = null,
-    val isLoading: Boolean = false,
-    val isSuccess: Boolean = false,
-    val errorMessage: String? = null
-)

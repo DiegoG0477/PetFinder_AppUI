@@ -1,14 +1,9 @@
 package com.project.petfinder.features.register.domain.model
 
+import com.project.petfinder.core.domain.model.User
+
 data class RegisterResult(
     val isSuccess: Boolean,
     val errorMessage: String? = null,
     val user: User? = null
-)
-
-data class User(
-    val id: String,
-    val name: String,
-    val email: String,
-    val municipalityId: String
 )
