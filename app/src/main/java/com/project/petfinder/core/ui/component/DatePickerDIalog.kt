@@ -1,4 +1,4 @@
-package com.project.petfinder.features.bulletin.presentation.ui.component
+package com.project.petfinder.core.ui.component
 
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog

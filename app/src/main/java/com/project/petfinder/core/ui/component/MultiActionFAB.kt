@@ -7,16 +7,28 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.*
+import com.composables.icons.lucide.Eye
+import com.composables.icons.lucide.Heart
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Pencil
+import com.composables.icons.lucide.Plus
 
 @Composable
 fun MultiActionFAB(
@@ -51,8 +63,8 @@ fun MultiActionFAB(
                         onCreateBulletin()
                         onExpandedChange(false)
                     },
-                    containerColor = Color(0xFFF2D2BA),
-                    contentColor = Color(0xFFBB6835),
+                    containerColor = MaterialTheme.colorScheme.onSecondary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                 ) {
                     Icon(Lucide.Pencil, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
@@ -65,8 +77,8 @@ fun MultiActionFAB(
                         onReportSighting()
                         onExpandedChange(false)
                     },
-                    containerColor = Color(0xFFF2D2BA),
-                    contentColor = Color(0xFFBB6835),
+                    containerColor = MaterialTheme.colorScheme.onSecondary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                 ) {
                     Icon(Lucide.Eye, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
@@ -79,8 +91,8 @@ fun MultiActionFAB(
                         onReportRescue()
                         onExpandedChange(false)
                     },
-                    containerColor = Color(0xFFF2D2BA),
-                    contentColor = Color(0xFFBB6835),
+                    containerColor = MaterialTheme.colorScheme.onSecondary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                 ) {
                     Icon(Lucide.Heart, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
@@ -91,8 +103,8 @@ fun MultiActionFAB(
 
         FloatingActionButton(
             onClick = { onExpandedChange(!expanded) },
-            containerColor = Color(0xFFF2D2BA),
-            contentColor = Color(0xFFBB6835),
+            containerColor = MaterialTheme.colorScheme.onSecondary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             shape = CircleShape
         ) {
             Icon(
