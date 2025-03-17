@@ -11,7 +11,6 @@ import com.project.petfinder.features.home.domain.model.Pet
 @Composable
 fun PetsList(
     pets: List<Pet>,
-    onPetClick: (String) -> Unit,
     onReportRescue: (String) -> Unit,
     onReportSighting: (String) -> Unit
 ) {
@@ -22,7 +21,6 @@ fun PetsList(
         items(pets) { pet ->
             PetCard(
                 pet = pet,
-                onPetClick = { onPetClick(pet.id) },
                 onReportRescue = { onReportRescue(pet.id) },
                 onReportSighting = { onReportSighting(pet.id) }
             )

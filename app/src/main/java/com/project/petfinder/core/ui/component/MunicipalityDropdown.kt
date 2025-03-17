@@ -66,7 +66,7 @@ fun MunicipalityDropdown(
         shape = RoundedCornerShape(8.dp),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = Color.LightGray,
-            focusedBorderColor = MaterialTheme.colorScheme.onPrimary
+            focusedBorderColor = MaterialTheme.colorScheme.primary
         )
     )
 

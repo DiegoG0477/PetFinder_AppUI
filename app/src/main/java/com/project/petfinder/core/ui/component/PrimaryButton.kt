@@ -30,7 +30,7 @@ fun PrimaryButton(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         shape = RoundedCornerShape(8.dp),
         enabled = enabled && !isLoading
     ) {

@@ -14,12 +14,14 @@ private val DarkColorScheme = darkColorScheme(
     primary = BrownOrng,
     secondary = LowBrownOrng,
     secondaryContainer = LowBrownOrng,
+    onSecondary = White,
     tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = BrownOrng,
     secondary = LowBrownOrng,
+    onSecondary = BrownOrng,
     secondaryContainer = LowBrownOrng,
     tertiary = Pink40
 
@@ -37,8 +39,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun PetFinderTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -46,7 +47,6 @@ fun PetFinderTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }

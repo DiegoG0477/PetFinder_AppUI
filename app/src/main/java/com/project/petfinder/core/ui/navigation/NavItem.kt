@@ -1,11 +1,12 @@
 package com.project.petfinder.core.ui.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.composables.icons.lucide.Eye
 import com.composables.icons.lucide.Heart
 import com.composables.icons.lucide.House
+import com.composables.icons.lucide.LogIn
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.PawPrint
-import com.composables.icons.lucide.Eye
 
 sealed class NavItem(
     val icon: ImageVector,
@@ -34,5 +35,17 @@ sealed class NavItem(
         icon = Lucide.Heart,
         label = "Reportar Rescate",
         route = "report_rescate"
+    )
+
+    object Login : NavItem(
+        icon = Lucide.LogIn,
+        label = "Iniciar sesión",
+        route = "login"
+    )
+
+    object Register : NavItem(
+        icon = Lucide.LogIn,
+        label = "Registrarse",
+        route = "register"
     )
 }

@@ -3,6 +3,7 @@ package com.project.petfinder.features.home.presentation.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.project.petfinder.features.home.domain.model.Pet
+import com.project.petfinder.features.home.presentation.viewmodel.FabState
 import com.project.petfinder.features.home.presentation.viewmodel.HomeUiState
 import java.time.LocalDateTime
 
@@ -11,11 +12,14 @@ import java.time.LocalDateTime
 fun HomeScreenEmptyPreview() {
     HomeContent(
         uiState = HomeUiState(),
-        onAddPetClick = {},
-        onPetClick = {},
+        fabState = FabState(),
+        onFabExpandedChange = {},
+        onCreateBulletinClick = {},
+        onReportSightingClick = {},
+        onReportRescueClick = {},
         onReportRescue = {},
         onReportSighting = {},
-        onShareClick = {}
+        onAccountClick = {}
     )
 }
 
@@ -24,11 +28,14 @@ fun HomeScreenEmptyPreview() {
 fun HomeScreenLoadingPreview() {
     HomeContent(
         uiState = HomeUiState(isLoading = true),
-        onAddPetClick = {},
-        onPetClick = {},
+        fabState = FabState(),
+        onFabExpandedChange = {},
+        onCreateBulletinClick = {},
+        onReportSightingClick = {},
+        onReportRescueClick = {},
         onReportRescue = {},
         onReportSighting = {},
-        onShareClick = {}
+        onAccountClick = {}
     )
 }
 
@@ -58,10 +65,13 @@ fun HomeScreenWithPetsPreview() {
 
     HomeContent(
         uiState = HomeUiState(pets = samplePets),
-        onAddPetClick = {},
-        onPetClick = {},
+        fabState = FabState(),
+        onFabExpandedChange = {},
+        onCreateBulletinClick = {},
+        onReportSightingClick = {},
+        onReportRescueClick = {},
         onReportRescue = {},
         onReportSighting = {},
-        onShareClick = {}
+        onAccountClick = {}
     )
 }

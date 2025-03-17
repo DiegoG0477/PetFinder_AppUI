@@ -45,7 +45,7 @@ fun MultiActionFAB(
     }
 
     Column(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.padding(12.dp),
         horizontalAlignment = Alignment.End
     ) {
         AnimatedVisibility(
@@ -55,7 +55,7 @@ fun MultiActionFAB(
         ) {
             Column(
                 horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // Crear Boletín
                 ExtendedFloatingActionButton(
@@ -63,11 +63,11 @@ fun MultiActionFAB(
                         onCreateBulletin()
                         onExpandedChange(false)
                     },
-                    containerColor = MaterialTheme.colorScheme.onSecondary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
                 ) {
                     Icon(Lucide.Pencil, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(12.dp))
                     Text("Crear Boletín")
                 }
 
@@ -77,11 +77,11 @@ fun MultiActionFAB(
                         onReportSighting()
                         onExpandedChange(false)
                     },
-                    containerColor = MaterialTheme.colorScheme.onSecondary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
                 ) {
                     Icon(Lucide.Eye, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(12.dp))
                     Text("Reportar Avistamiento")
                 }
 
@@ -91,11 +91,11 @@ fun MultiActionFAB(
                         onReportRescue()
                         onExpandedChange(false)
                     },
-                    containerColor = MaterialTheme.colorScheme.onSecondary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = MaterialTheme.colorScheme.onSecondary,
                 ) {
                     Icon(Lucide.Heart, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(12.dp))
                     Text("Reportar Rescate")
                 }
             }
@@ -103,8 +103,8 @@ fun MultiActionFAB(
 
         FloatingActionButton(
             onClick = { onExpandedChange(!expanded) },
-            containerColor = MaterialTheme.colorScheme.onSecondary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onSecondary,
             shape = CircleShape
         ) {
             Icon(

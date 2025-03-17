@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Calendar
 import com.composables.icons.lucide.Lucide
 import com.project.petfinder.core.domain.model.Municipality
-import com.project.petfinder.core.ui.component.DatePicker
+import com.project.petfinder.core.ui.component.DatePickerField
 import com.project.petfinder.core.ui.component.FormField
 import com.project.petfinder.core.ui.component.ImageSelector
 import com.project.petfinder.core.ui.component.MunicipalityDropdown
@@ -68,16 +68,11 @@ fun SightingForm(
         modifier = Modifier.clickable { showDatePicker = true }
     )
 
-    if (showDatePicker) {
-        DatePicker(
-            onDismissRequest = { showDatePicker = false },
-            onDateSelected = { selectedDate ->
-                onDateChanged(selectedDate)
-                showDatePicker = false
-            },
-            selectedDate = uiState.date
-        )
-    }
+    DatePickerField(
+        date = uiState.date,
+        onDateChanged = onDateChanged,
+        enabled = !uiState.isLoading
+    )
 
     Spacer(modifier = Modifier.height(16.dp))
 

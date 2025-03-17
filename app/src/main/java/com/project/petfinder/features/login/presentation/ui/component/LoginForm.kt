@@ -59,11 +59,12 @@ fun LoginForm(
             Icon(
                 imageVector = Lucide.Mail,
                 contentDescription = "Email Icon",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(20.dp)
             )
         },
-        keyboardType = KeyboardType.Email
+        keyboardType = KeyboardType.Email,
+        isError = errorMessage != null,
+        errorMessage = errorMessage
     )
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -77,7 +78,6 @@ fun LoginForm(
             Icon(
                 imageVector = Lucide.Lock,
                 contentDescription = "Password Icon",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(20.dp)
             )
         },
@@ -85,8 +85,7 @@ fun LoginForm(
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(
                     imageVector = if (passwordVisible) Lucide.EyeOff else Lucide.Eye,
-                    contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
                 )
             }
         },

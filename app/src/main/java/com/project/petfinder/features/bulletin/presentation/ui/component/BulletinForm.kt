@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.project.petfinder.core.domain.model.Municipality
 import com.project.petfinder.core.ui.component.DatePickerField
+import com.project.petfinder.core.ui.component.FormField
 import com.project.petfinder.core.ui.component.ImageSelector
 import com.project.petfinder.core.ui.component.MunicipalityDropdown
 import com.project.petfinder.core.ui.component.PrimaryButton
@@ -41,12 +41,11 @@ fun BulletinForm(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Pet Name Field
-        OutlinedTextField(
+
+        FormField(
             value = petName,
             onValueChange = onPetNameChanged,
-            label = { Text("Nombre de la mascota") },
-            modifier = Modifier.fillMaxWidth(),
+            label = "Nombre de la mascota",
             enabled = !isLoading
         )
 
@@ -70,14 +69,13 @@ fun BulletinForm(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Additional Info Field
-        OutlinedTextField(
+        FormField(
             value = additionalInfo,
             onValueChange = onAdditionalInfoChanged,
-            label = { Text("Información adicional") },
-            modifier = Modifier.fillMaxWidth(),
+            label = "Información adicional",
             minLines = 3,
             maxLines = 5,
+            singleLine = false,
             enabled = !isLoading
         )
 

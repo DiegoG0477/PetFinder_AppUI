@@ -1,9 +1,21 @@
 package com.project.petfinder.features.home.presentation.ui.component
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,24 +28,22 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.project.petfinder.features.home.domain.model.Pet
 import com.project.petfinder.core.ui.theme.Montserrat
+import com.project.petfinder.features.home.domain.model.Pet
 
 @Composable
 fun PetCard(
     pet: Pet,
-    onPetClick: () -> Unit,
     onReportRescue: () -> Unit,
     onReportSighting: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onPetClick),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFF8F0)
+            containerColor = MaterialTheme.colorScheme.secondary
         )
     ) {
         Column(
@@ -48,7 +58,7 @@ fun PetCard(
                     text = "Última vez visto en",
                     fontSize = 12.sp,
                     fontFamily = Montserrat,
-                    color = Color(0xFFBB6835)
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
@@ -106,7 +116,7 @@ fun PetCard(
                         text = pet.name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFBB6835),
+                        color = MaterialTheme.colorScheme.primary,
                         fontFamily = Montserrat
                     )
 
@@ -134,10 +144,10 @@ fun PetCard(
                     onClick = onReportRescue,
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFFBB6835)
+                        contentColor = MaterialTheme.colorScheme.primary
                     ),
                     border = ButtonDefaults.outlinedButtonBorder.copy(
-                        brush = SolidColor(Color(0xFFBB6835))
+                        brush = SolidColor(MaterialTheme.colorScheme.primary)
                     )
                 ) {
                     Text(
@@ -151,19 +161,19 @@ fun PetCard(
                     onClick = onReportSighting,
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color(0xFFBB6835)
+                        contentColor = MaterialTheme.colorScheme.primary
                     ),
                     border = ButtonDefaults.outlinedButtonBorder.copy(
-                        brush = SolidColor(Color(0xFFBB6835))
+                        brush = SolidColor(MaterialTheme.colorScheme.primary)
                     )
                 ) {
                     Text(
-                        text = "Reportar\navistamiento",  // Separamos el texto en dos líneas con \n
+                        text = "Reportar\navistamiento",
                         fontSize = 12.sp,
                         fontFamily = Montserrat,
-                        textAlign = TextAlign.Center,     // Centramos el texto
-                        modifier = Modifier.fillMaxWidth(), // Hacemos que el Text ocupe todo el ancho disponible
-                        lineHeight = 16.sp               // Ajustamos el espaciado entre líneas
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                        lineHeight = 16.sp
                     )
                 }
             }
